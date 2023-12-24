@@ -1,0 +1,3 @@
+﻿  CplusplusMineSweeper.cpp
+E:\Mfiles\Projects\CplusplusMineSweeper\CplusplusMineSweeper.cpp(11,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  CplusplusMineSweeper.vcxproj -> E:\Mfiles\Projects\CplusplusMineSweeper\Debug\CplusplusMineSweeper.exe

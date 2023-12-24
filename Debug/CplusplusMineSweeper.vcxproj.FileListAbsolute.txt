@@ -1,0 +1,2 @@
+E:\Mfiles\Projects\CplusplusMineSweeper\Debug\CplusplusMineSweeper.exe
+E:\Mfiles\Projects\CplusplusMineSweeper\Debug\CplusplusMineSweeper.pdb
