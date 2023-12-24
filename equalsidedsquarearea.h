@@ -3,12 +3,11 @@
 #define EQUALSIDEDSQUAREAREA_H
 
 
-class equalsidedsquarearea
+class equal_sided_square_area
 {
 	public:
 		coord2 center;
-		int sideLength;
-		
-		equalsidedsquarearea(int sideLength);
+		int side_length;		
+		equal_sided_square_area(int sideLength);
 };
 #endif

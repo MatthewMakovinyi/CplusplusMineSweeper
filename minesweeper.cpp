@@ -1,30 +1,30 @@
 #include "minesweeper.h"
 #include <iostream>
-minesweeper::minesweeper(int width, int height,int mineamount)
-	: height(height), width(width), field(new int[height * width]),mineamount(mineamount), area3x3(3), amountofminesinneighbours(new int[height * width]),revealedarea(new int[height * width]), flags(new int[height*width])
+minesweeper::minesweeper(int width, int height,int mine_amount)
+	: height(height), width(width), field(new int[height * width]),mine_amount(mine_amount), area_3x3(3), amount_of_mines_in_neighbours(new int[height * width]),revealed_area(new int[height * width]), flags(new int[height*width])
 {
 	for (int i = 0; i < height; i++)
 	{
 		for (int j = 0; j < width; ++j)
 		{
 			field[(i * width) + j] = 0;
-			amountofminesinneighbours[(i * width) + j] = 0;
-			revealedarea[(i * width) + j] = 0;
+			amount_of_mines_in_neighbours[(i * width) + j] = 0;
+			revealed_area[(i * width) + j] = 0;
 			flags[(i * width) + j] = 0;
 		}
 	}
 }
 minesweeper::minesweeper()
-	: height(0), width(0), field(new int[0]), mineamount(0), area3x3(3), amountofminesinneighbours(new int[0]), revealedarea(new int[0]), flags(new int[0])
+	: height(0), width(0), field(new int[0]), mine_amount(0), area_3x3(3), amount_of_mines_in_neighbours(new int[0]), revealed_area(new int[0]), flags(new int[0])
 {
 }
 minesweeper::~minesweeper()
 {
 	delete[] field;
-	delete[] amountofminesinneighbours;
-	delete[] revealedarea;
+	delete[] amount_of_mines_in_neighbours;
+	delete[] revealed_area;
 }
-void minesweeper::showmines()
+void minesweeper::show_mines()
 {
 	for (int i = 0; i < height; i++)
 	{
@@ -32,61 +32,61 @@ void minesweeper::showmines()
 		{
 			std::cout << " " << field[(i*width) + j];
 		}
-		std::cout << std::endl;
+		std::cout << "\n";
 	}
 }
-void minesweeper::shownumbers()
+void minesweeper::show_numbers()
 {
 	for (int i = 0; i < height; i++)
 	{
 		for (int j = 0; j < width; ++j)
 		{
-			std::cout <<" " << amountofminesinneighbours[(i * width) + j];
+			std::cout <<" " << amount_of_mines_in_neighbours[(i * width) + j];
 		}
-		std::cout << std::endl;
+		std::cout << "\n";
 	}
 }
-void minesweeper::showall()
+void minesweeper::show_all()
 {
 	for (int i = 0; i < height; i++)
 	{
 		for (int j = 0; j < width; ++j)
 		{
-			if (*(revealedarea+(i*width)+j) == 0)
+			if (*(revealed_area+(i*width)+j) == 0)
 			{
 				std::cout << " /";
 			}
 			else
 			{
-				if (amountofminesinneighbours[(i * width) + j] > 8)
+				if (amount_of_mines_in_neighbours[(i * width) + j] > 8)
 				{
-					if (amountofminesinneighbours[(i * width) + j] == 9)
+					if (amount_of_mines_in_neighbours[(i * width) + j] == 9)
 					{
 						std::cout << " *";
 					}
 				}
 				else
 				{
-					std::cout << " " << amountofminesinneighbours[(i * width) + j];
+					std::cout << " " << amount_of_mines_in_neighbours[(i * width) + j];
 				}
 							
 			}
 		}
-		std::cout << std::endl;
+		std::cout << "\n";
 	}
 }
-void minesweeper::generateMines(coord2 startingPoint)
+void minesweeper::generate_mines(coord2 starting_point)
 {
 	int count = 0;
-	int lastMinePlaced = 0;
-	while (count != mineamount)
+	int last_mine_placed = 0;
+	while (count != mine_amount)
 	{
 		for (int i = 0; i < height; i++)
 		{
 			for (int j = 0; j < width; ++j)
 			{
 				
-				if (j < startingPoint.x + 2 && j > startingPoint.x - 2 && i < startingPoint.y + 2 && i > startingPoint.y - 2)
+				if (j < starting_point.x + 2 && j > starting_point.x - 2 && i < starting_point.y + 2 && i > starting_point.y - 2)
 				{
 					continue;
 				}
@@ -96,122 +96,199 @@ void minesweeper::generateMines(coord2 startingPoint)
 				}				
 				else
 				{
-					if (lastMinePlaced == 0)
+					if (last_mine_placed == 0)
 					{
 						if (rand() % 100 > 80)
 						{
 							field[(i * width) + j] = 1;
 							count += 1;
-							lastMinePlaced = 10;
+							last_mine_placed = 10;
 						}
 					}
 					else
 
 					{
-						--lastMinePlaced;
+						--last_mine_placed;
 					}
 					
 				}
 
-				if (count == mineamount)
+				if (count == mine_amount)
 				{
 					break;
 				}
 			}
-			if (count == mineamount)
+			if (count == mine_amount)
 			{
 				break;
 			}
 		}
 	}
-	generateAmountOfMines();
-	revealpoint(startingPoint);
+	generate_amount_of_mines();
+	reveal_point(starting_point);
 }
-void minesweeper::revealpoint(coord2 revealPoint)
+void minesweeper::reveal_point(coord2 reveal_point)
 {
-	*(revealedarea + (revealPoint.y * width) + revealPoint.x) = 1;	
-	if (*(amountofminesinneighbours + (revealPoint.y * width) + revealPoint.x) == 0)
+	if (*(flags + (reveal_point.y * width) + reveal_point.x) == 0)
 	{
-		int count = -1;
-		while (0 != count)
+		*(revealed_area + (reveal_point.y * width) + reveal_point.x) = 1;
+		if (*(amount_of_mines_in_neighbours + (reveal_point.y * width) + reveal_point.x) == 0)
 		{
-			count = 0;
-			for (int i = 0; i < height; ++i)
+			int count = -1;
+			while (0 != count)
 			{
-				for (int j = 0; j < width; ++j)
+				count = 0;
+				for (int i = 0; i < height; ++i)
 				{
-					if (*(amountofminesinneighbours+(i * width + j)) == 0 && *(revealedarea + (width * i) + j) == 0)
+					for (int j = 0; j < width; ++j)
 					{
-						
-						if (i - 1 >= 0)
+						if (*(amount_of_mines_in_neighbours + (i * width + j)) == 0 && *(revealed_area + (width * i) + j) == 0)
 						{
-							if (*(revealedarea + (width * (i-1)) + j) == 1)
+
+							if (i - 1 >= 0)
 							{
-								*(revealedarea + (width * i) + j) = 1;
-								count += 1;
-								continue;
-							}	
+								if (*(revealed_area + (width * (i - 1)) + j) == 1)
+								{
+									*(revealed_area + (width * i) + j) = 1;
+									count += 1;
+									continue;
+								}
+								if (j - 1 >= 0)
+								{
+									if (*(revealed_area + (width * (i - 1)) + j - 1) == 1)
+									{
+										*(revealed_area + (width * i) + j) = 1;
+										count += 1;
+										continue;
+									}
+								}
+								if (j + 1 < width)
+								{
+									if (*(revealed_area + (width * (i - 1)) + j + 1) == 1)
+									{
+										*(revealed_area + (width * i) + j) = 1;
+										count += 1;
+										continue;
+									}
+								}
+							}
+							if (i + 1 < height)
+							{
+								if (*(revealed_area + (width * (i + 1)) + j) == 1)
+								{
+									*(revealed_area + (width * i) + j) = 1;
+									count += 1;
+									continue;
+								}
+								if (j - 1 >= 0)
+								{
+									if (*(revealed_area + (width * (i + 1)) + j - 1) == 1)
+									{
+										*(revealed_area + (width * i) + j) = 1;
+										count += 1;
+										continue;
+									}
+								}
+								if (j + 1 < width)
+								{
+									if (*(revealed_area + (width * (i + 1)) + j + 1) == 1)
+									{
+										*(revealed_area + (width * i) + j) = 1;
+										count += 1;
+										continue;
+									}
+								}
+							}
 							if (j - 1 >= 0)
 							{
-								if (*(revealedarea + (width * (i - 1)) + j - 1) == 1)
+								if (*(revealed_area + (width * i) + j - 1) == 1)
 								{
-									*(revealedarea + (width * i) + j) = 1;
+									*(revealed_area + (width * i) + j) = 1;
 									count += 1;
 									continue;
 								}
 							}
 							if (j + 1 < width)
 							{
-								if (*(revealedarea + (width * (i - 1)) + j + 1) == 1)
+								if (*(revealed_area + (width * i) + j + 1) == 1)
 								{
-									*(revealedarea + (width * i) + j) = 1;
+									*(revealed_area + (width * i) + j) = 1;
 									count += 1;
+									continue;
+								}
+							}
+						}
+					}
+				}
+			}
+			for (int i = 0; i < height; ++i)
+			{
+				for (int j = 0; j < width; ++j)
+				{
+					if (*(amount_of_mines_in_neighbours + (i * width + j)) != 0 && *(revealed_area + (width * i) + j) == 0)
+					{
+
+						if (i - 1 >= 0)
+						{
+							if (*(revealed_area + (width * (i - 1)) + j) == 1 && *(amount_of_mines_in_neighbours + (width * (i - 1)) + j) == 0)
+							{
+								*(revealed_area + (width * i) + j) = 1;
+								continue;
+							}
+							if (j - 1 >= 0)
+							{
+								if (*(revealed_area + (width * (i - 1)) + j - 1) == 1 && *(amount_of_mines_in_neighbours + (width * (i - 1)) + j - 1) == 0)
+								{
+									*(revealed_area + (width * i) + j) = 1;
+									continue;
+								}
+							}
+							if (j + 1 < width)
+							{
+								if (*(revealed_area + (width * (i - 1)) + j + 1) == 1 && *(amount_of_mines_in_neighbours + (width * (i - 1)) + j + 1) == 0)
+								{
+									*(revealed_area + (width * i) + j) = 1;
 									continue;
 								}
 							}
 						}
 						if (i + 1 < height)
 						{
-							if (*(revealedarea + (width * (i + 1)) + j) == 1)
+							if (*(revealed_area + (width * (i + 1)) + j) == 1 && *(amount_of_mines_in_neighbours + (width * (i + 1)) + j) == 0)
 							{
-								*(revealedarea + (width * i) + j) = 1;
-								count += 1;
+								*(revealed_area + (width * i) + j) = 1;
 								continue;
 							}
 							if (j - 1 >= 0)
 							{
-								if (*(revealedarea + (width * (i + 1)) + j - 1) == 1)
+								if (*(revealed_area + (width * (i + 1)) + j - 1) == 1 && *(amount_of_mines_in_neighbours + (width * (i + 1)) + j - 1) == 0)
 								{
-									*(revealedarea + (width * i) + j) = 1;
-									count += 1;
+									*(revealed_area + (width * i) + j) = 1;
 									continue;
 								}
 							}
 							if (j + 1 < width)
 							{
-								if (*(revealedarea + (width * (i + 1)) + j + 1) == 1)
+								if (*(revealed_area + (width * (i + 1)) + j + 1) == 1 && *(amount_of_mines_in_neighbours + (width * (i + 1)) + j + 1) == 0)
 								{
-									*(revealedarea + (width * i) + j) = 1;
-									count += 1;
+									*(revealed_area + (width * i) + j) = 1;
 									continue;
 								}
 							}
 						}
 						if (j - 1 >= 0)
 						{
-							if (*(revealedarea + (width * i) + j - 1) == 1)
+							if (*(revealed_area + (width * i) + j - 1) == 1 && *(amount_of_mines_in_neighbours + (width * i) + j - 1) == 0)
 							{
-								*(revealedarea + (width * i) + j) = 1;
-								count += 1;
+								*(revealed_area + (width * i) + j) = 1;
 								continue;
 							}
 						}
 						if (j + 1 < width)
 						{
-							if (*(revealedarea + (width * i) + j + 1) == 1)
+							if (*(revealed_area + (width * i) + j + 1) == 1 && *(amount_of_mines_in_neighbours + (width * i) + j + 1) == 0)
 							{
-								*(revealedarea + (width * i) + j) = 1;
-								count += 1;
+								*(revealed_area + (width * i) + j) = 1;
 								continue;
 							}
 						}
@@ -219,118 +296,43 @@ void minesweeper::revealpoint(coord2 revealPoint)
 				}
 			}
 		}
-		for (int i = 0; i < height; ++i)
-		{
-			for (int j = 0; j < width; ++j)
-			{
-				if (*(amountofminesinneighbours + (i * width + j)) != 0 && *(revealedarea + (width * i) + j) == 0)
-				{
-
-					if (i - 1 >= 0)
-					{
-						if (*(revealedarea + (width * (i - 1)) + j) == 1 && *(amountofminesinneighbours + (width * (i - 1)) + j) == 0)
-						{
-							*(revealedarea + (width * i) + j) = 1;
-							continue;
-						}
-						if (j - 1 >= 0)
-						{
-							if (*(revealedarea + (width * (i - 1)) + j - 1) == 1 && *(amountofminesinneighbours + (width * (i - 1)) + j - 1) == 0)
-							{
-								*(revealedarea + (width * i) + j) = 1;
-								continue;
-							}
-						}
-						if (j + 1 < width)
-						{
-							if (*(revealedarea + (width * (i - 1)) + j + 1) == 1 && *(amountofminesinneighbours + (width * (i - 1)) + j + 1) == 0)
-							{
-								*(revealedarea + (width * i) + j) = 1;
-								continue;
-							}
-						}
-					}
-					if (i + 1 < height)
-					{
-						if (*(revealedarea + (width * (i + 1)) + j) == 1 && *(amountofminesinneighbours + (width * (i + 1)) + j) == 0)
-						{
-							*(revealedarea + (width * i) + j) = 1;
-							continue;
-						}
-						if (j - 1 >= 0)
-						{
-							if (*(revealedarea + (width * (i + 1)) + j - 1) == 1 && *(amountofminesinneighbours + (width * (i + 1)) + j - 1) == 0)
-							{
-								*(revealedarea + (width * i) + j) = 1;
-								continue;
-							}
-						}
-						if (j + 1 < width)
-						{
-							if (*(revealedarea + (width * (i + 1)) + j + 1) == 1 && *(amountofminesinneighbours + (width * (i + 1)) + j + 1) == 0)
-							{
-								*(revealedarea + (width * i) + j) = 1;
-								continue;
-							}
-						}
-					}
-					if (j - 1 >= 0)
-					{
-						if (*(revealedarea + (width * i) + j - 1) == 1 && *(amountofminesinneighbours + (width * i) + j - 1) == 0)
-						{
-							*(revealedarea + (width * i) + j) = 1;
-							continue;
-						}
-					}
-					if (j + 1 < width)
-					{
-						if (*(revealedarea + (width * i) + j + 1) == 1 && *(amountofminesinneighbours + (width * i) + j + 1) == 0)
-						{
-							*(revealedarea + (width * i) + j) = 1;
-							continue;
-						}
-					}
-				}
-			}
-		}
-	}
-	
+	}		
 }
-void minesweeper::revealareaaroundnumwithenoughmineflag(coord2 revealpoint)
+void minesweeper::reveal_area_around_num_with_enough_mine_flag(coord2 reveal_point)
 {
 	bool doesithaveenoughflags = false;
-	int beginningX = 0;
-	int endX = 2;
-	if (revealpoint.x != 0)
+	int beginning_x = 0;
+	int end_x = 2;
+	if (reveal_point.x != 0)
 	{
-		beginningX = revealpoint.x-1;
-		if (revealpoint.x != width - 1)
+		beginning_x = reveal_point.x-1;
+		if (reveal_point.x != width - 1)
 		{
-			endX = revealpoint.x + 1;
+			end_x = reveal_point.x + 1;
 		}
 		else
 		{
-			endX = width;
+			end_x = width;
 		}
 	}
-	int beginningY = 0;
-	int endY = 2;
-	if (revealpoint.y != 0)
+	int beginning_y = 0;
+	int end_y = 2;
+	if (reveal_point.y != 0)
 	{
-		beginningY = revealpoint.y - 1;
-		if (revealpoint.y != height - 1)
+		beginning_y = reveal_point.y - 1;
+		if (reveal_point.y != height - 1)
 		{
-			endY = revealpoint.y + 1;
+			end_y = reveal_point.y + 1;
 		}
 		else
 		{
-			endY = height;
+			end_y = height;
 		}
 	}
 	int count = 0;
-	for (int i = beginningY; i < endY; ++i)
+	for (int i = beginning_y; i < end_y; ++i)
 	{
-		for (int j = beginningX; j < endX; ++j)
+		for (int j = beginning_x; j < end_x; ++j)
 		{
 			if (*(flags + (i * width) + j) == 1)
 			{
@@ -338,29 +340,41 @@ void minesweeper::revealareaaroundnumwithenoughmineflag(coord2 revealpoint)
 			}
 		}
 	}
-	if (count == *(amountofminesinneighbours + (revealpoint.y) + revealpoint.x))
+	if (count == *(amount_of_mines_in_neighbours + (reveal_point.y * width) + reveal_point.x));
+	{
+		for (int i = beginning_y; i < end_y; ++i)
+		{
+			for (int j = beginning_x; j < end_x; ++j)
+			{
+				if (*(flags + (i * width) + j) == 0 && *(revealed_area + (i * width) + j) == 0)
+				{
+					*(revealed_area + (i * width) + j) = 1;
+				}
+			}
+		}
+	}
 }
-int minesweeper::addThreeByThreeArea(int row, int column)
+int minesweeper::add_three_by_three_area(int row, int column)
 {
-	int lengthFromCenter = ((minesweeper::area3x3.sideLength - 1) / 2);
-	int beginningX = column - lengthFromCenter;
-	int beginningY = row - lengthFromCenter;
-	int endX = column + lengthFromCenter;
-	int endY = row + lengthFromCenter;
+	int length_from_center = ((minesweeper::area_3x3.side_length - 1) / 2);
+	int beginning_x = column - length_from_center;
+	int beginning_y = row - length_from_center;
+	int end_x = column + length_from_center;
+	int end_y = row + length_from_center;
 	int sum = 0;
-	for (int i = beginningY; i < endY + 1; ++i)
+	for (int i = beginning_y; i < end_y + 1; ++i)
 	{
 		if (i < 0 || i > height-1)
 		{
 			continue;
 		}
-		for (int j = beginningX; j < endX + 1; ++j)
+		for (int j = beginning_x; j < end_x + 1; ++j)
 		{
 			if (j < 0 || j > width-1)
 			{
 				continue;
 			}
-			//std::cout << std::endl << row << " " << column << ": " << i <<" " << j <<" "  << sum << std::endl;
+			//std::cout << "\n" << row << " " << column << ": " << i <<" " << j <<" "  << sum << "\n";
 			sum += *(minesweeper::field + (i * width) + j);
 		}
 
@@ -368,7 +382,15 @@ int minesweeper::addThreeByThreeArea(int row, int column)
 	return sum;
 }
 
-void minesweeper::generateAmountOfMines()
+void minesweeper::make_tile_flag(coord2 flag_point)
+{
+	if (*(revealed_area + (flag_point.y * width) + flag_point.x) == 0)
+	{
+		*(flags + (flag_point.y * width) + flag_point.x) = 1;
+	}
+}
+
+void minesweeper::generate_amount_of_mines()
 {
 	for (int i = 0; i < height; ++i)
 	{
@@ -376,10 +398,10 @@ void minesweeper::generateAmountOfMines()
 		{
 			if (*(minesweeper::field + (i * width) + j) == 1)
 			{
-				*(minesweeper::amountofminesinneighbours + (i * width) + j) = 9;
+				*(minesweeper::amount_of_mines_in_neighbours + (i * width) + j) = 9;
 				continue;
 			}
-			*(minesweeper::amountofminesinneighbours + (i * width) + j) = addThreeByThreeArea(i, j);
+			*(minesweeper::amount_of_mines_in_neighbours + (i * width) + j) = add_three_by_three_area(i, j);
 		}
 	}
 }

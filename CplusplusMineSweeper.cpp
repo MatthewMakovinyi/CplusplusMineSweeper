@@ -14,62 +14,57 @@ int main()
         int width = 0;
         do
         {
-            cout << endl << "Width: ";
+            cout << "\nWidth: ";
             cin >> width;
         } while (width <= 4);
         int height = 0;
         do
         {
-            cout << endl << "Height: ";
+            cout << "\nHeight: ";
             cin >> height;
         } while (height <= 4);
-        int amountofmines = 0;
+        int amount_of_mines = 0;
         do
         {
-            cout << endl << "Amount of mines: ";
-            cin >> amountofmines;
-        } while (amountofmines < 16 || amountofmines > ((width*height)-9));
+            cout << "\nAmount of mines: ";
+            cin >> amount_of_mines;
+        } while (amount_of_mines < 16 || amount_of_mines > ((width*height)-9));
 
-        minesweeper test(width, height, amountofmines);
+        minesweeper game_simulation(width, height, amount_of_mines);
         int x = 0;
         do
         {
-            cout << endl << "Column: ";
+            cout << "\nColumn: ";
             cin >> x;
         } while (x < 0 || x > width-1);
         int y = 0;
         do
         {
-            cout << endl << "Row: ";
+            cout << "\nRow: ";
             cin >> y;
         } while (y < 0 || y > height - 1);
-        coord2 revealpoint(x, y);
-        test.generateMines(revealpoint);
+        coord2 reveal_point(x, y);
+        game_simulation.generate_mines(reveal_point);
         while (true)
         {
             
-            test.showall();
+            game_simulation.show_all();
             do
             {
-                cout << endl << "Column: ";
+                cout << "\nColumn: ";
                 cin >> x;
             } while (x < 0 || x > width - 1);
             int y = 0;
             do
             {
-                cout << endl << "Row: ";
+                cout << "\nRow: ";
                 cin >> y;
             } while (y < 0 || y > height - 1);
-            revealpoint.x = x;
-            revealpoint.y = y;
-            test.revealpoint(revealpoint);
+            reveal_point.x = x;
+            reveal_point.y = y;
+            game_simulation.reveal_point(reveal_point);
         }
     }
-    
-       
-    
-    string input = "";
-    cin >> input;
 }
 
 

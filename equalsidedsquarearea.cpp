@@ -1,6 +1,6 @@
 #include "equalsidedsquarearea.h"
 #include <iostream>
 
-equalsidedsquarearea::equalsidedsquarearea( int sideLength)
-	:center((sideLength-1)/2, (sideLength - 1) / 2), sideLength(sideLength)
+equal_sided_square_area::equal_sided_square_area( int side_length)
+	:center((side_length-1)/2, (side_length - 1) / 2), side_length(side_length)
 {}
