@@ -93,7 +93,7 @@ int main()
             }
             else
             {
-                game_simulation.reset();
+                
                 width = 0;
                 do
                 {
@@ -112,8 +112,7 @@ int main()
                     cout << "\nAmount of mines: ";
                     cin >> amount_of_mines;
                 } while (amount_of_mines < 16 || amount_of_mines >((width * height) - 9));
-                game_simulation.~minesweeper();
-                minesweeper game_simulation(width, height, amount_of_mines);
+                game_simulation.reset(width,height,amount_of_mines);
                 game_simulation.show_all();
                 x = 0;
                 do

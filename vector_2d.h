@@ -10,6 +10,8 @@ class vector_2d
 		vector_2d(int width, int height, int defaul_value);
 		int get_value(int row, int column);
 		int& set_value(int row, int column);
+		void clear();
+		void setup(int iwidth, int iheight, int default_value);
 };
 #endif
 

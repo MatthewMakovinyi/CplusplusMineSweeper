@@ -69,18 +69,19 @@ void minesweeper::show_all()
 		std::cout << "\n";
 	}
 }
-void minesweeper::reset()
+void minesweeper::reset(int iwidth, int iheight,int imine_amount)
 {
-	for (int i = 0; i < height; ++i)
-	{
-		for (int j = 0; j < width; ++j)
-		{
-			flags.set_value(i, j) = 0;
-			revealed_area.set_value(i, j) = 0;
-			amount_of_mines_in_neighbours.set_value(i, j) = 0;
-			field.set_value(i, j) = 0;
-		}
-	}
+	width = iwidth;
+	height = iheight;
+	mine_amount = imine_amount;
+	flags.clear();
+	revealed_area.clear();
+	amount_of_mines_in_neighbours.clear();
+	field.clear();
+	flags.setup(width,height,0);
+	revealed_area.setup(width, height, 0);
+	amount_of_mines_in_neighbours.setup(width, height, 0);
+	field.setup(width, height, 0);
 }
 void minesweeper::generate_mines(coord2 starting_point)
 {

@@ -16,7 +16,7 @@ class minesweeper
 		void reveal_area_with_enough_flags(coord2 reveal_point);
 		void generate_amount_of_mines();
 		void make_tile_flag(coord2 flag_point);
-		void reset();
+		void reset(int iwidth, int iheight, int imineamount);
 		vector_2d field;
 		vector_2d amount_of_mines_in_neighbours;
 		vector_2d revealed_area;
