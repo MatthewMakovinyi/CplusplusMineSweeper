@@ -17,7 +17,7 @@ void minesweeper::show_mines()
 	{
 		for (int j = 0; j < width; ++j)
 		{
-			std::cout << " " << field.get_value_at_index(i,j);
+			std::cout << " " << field.get_value(i,j);
 		}
 		std::cout << "\n";
 	}
@@ -28,7 +28,7 @@ void minesweeper::show_numbers()
 	{
 		for (int j = 0; j < width; ++j)
 		{
-			std::cout <<" " << amount_of_mines_in_neighbours.get_value_at_index(i,j);
+			std::cout <<" " << amount_of_mines_in_neighbours.get_value(i,j);
 		}
 		std::cout << "\n";
 	}
@@ -39,27 +39,47 @@ void minesweeper::show_all()
 	{
 		for (int j = 0; j < width; ++j)
 		{
-			if (revealed_area.get_value_at_index(i,j) == 0)
+			if (revealed_area.get_value(i,j) == 0)
 			{
-				std::cout << " /";
+				if (flags.get_value(i, j) != 1)
+				{
+					std::cout << " /";				
+				}
+				else
+				{
+					std::cout << " #";
+				}
 			}
 			else
 			{
-				if (amount_of_mines_in_neighbours.get_value_at_index(i,j) > 8)
+				if (amount_of_mines_in_neighbours.get_value(i,j) > 8)
 				{
-					if (amount_of_mines_in_neighbours.get_value_at_index(i,j) == 9)
+					if (amount_of_mines_in_neighbours.get_value(i,j) == 9)
 					{
 						std::cout << " *";
 					}
 				}
 				else
 				{
-					std::cout << " " << amount_of_mines_in_neighbours.get_value_at_index(i,j);
+					std::cout << " " << amount_of_mines_in_neighbours.get_value(i,j);
 				}
 							
 			}
 		}
 		std::cout << "\n";
+	}
+}
+void minesweeper::reset()
+{
+	for (int i = 0; i < height; ++i)
+	{
+		for (int j = 0; j < width; ++j)
+		{
+			flags.set_value(i, j) = 0;
+			revealed_area.set_value(i, j) = 0;
+			amount_of_mines_in_neighbours.set_value(i, j) = 0;
+			field.set_value(i, j) = 0;
+		}
 	}
 }
 void minesweeper::generate_mines(coord2 starting_point)
@@ -77,7 +97,7 @@ void minesweeper::generate_mines(coord2 starting_point)
 				{
 					continue;
 				}
-				if (field.get_value_at_index(i,j) == 1)
+				if (field.get_value(i,j) == 1)
 				{
 					continue;
 				}				
@@ -87,7 +107,7 @@ void minesweeper::generate_mines(coord2 starting_point)
 					{
 						if (rand() % 100 > 80)
 						{
-							field.modify_value_at_index( i,j,1);
+							field.set_value(i,j) = 1;
 							count += 1;
 							last_mine_placed = 10;
 						}
@@ -117,12 +137,12 @@ void minesweeper::generate_mines(coord2 starting_point)
 void minesweeper::reveal_point(coord2 reveal_point)
 {
 	
-	if (flags.get_value_at_index(reveal_point.y, reveal_point.x) == 0)
+	if (flags.get_value(reveal_point.y, reveal_point.x) == 0)
 	{
 		
-		revealed_area.modify_value_at_index(reveal_point.y, reveal_point.x, 1);
+		revealed_area.set_value(reveal_point.y, reveal_point.x) = 1;
 		
-		if (amount_of_mines_in_neighbours.get_value_at_index(reveal_point.y, reveal_point.x) == 0)
+		if (amount_of_mines_in_neighbours.get_value(reveal_point.y, reveal_point.x) == 0)
 		{
 			int count = -1;
 			while (0 != count)
@@ -133,33 +153,33 @@ void minesweeper::reveal_point(coord2 reveal_point)
 					for (int j = 0; j < width; ++j)
 					{
 						
-						if (amount_of_mines_in_neighbours.get_value_at_index(i, j) == 0 && revealed_area.get_value_at_index(i, j) == 0)
+						if (amount_of_mines_in_neighbours.get_value(i, j) == 0 && revealed_area.get_value(i, j) == 0)
 						{
 
 							if (i - 1 >= 0)
 							{
 								
-								if (revealed_area.get_value_at_index(i - 1, j) == 1)
+								if (revealed_area.get_value(i - 1, j) == 1)
 								{									
-									revealed_area.modify_value_at_index(i, j, 1);
+									revealed_area.set_value(i, j) = 1;
 									count += 1;
 									continue;
 								}
 								if (j - 1 >= 0)
 								{
 									
-									if (revealed_area.get_value_at_index(i - 1, j - 1) == 1)
+									if (revealed_area.get_value(i - 1, j - 1) == 1)
 									{
-										revealed_area.modify_value_at_index(i, j, 1);
+										revealed_area.set_value(i, j) = 1;
 										count += 1;
 										continue;
 									}
 								}
 								if (j + 1 < width)
 								{
-									if (revealed_area.get_value_at_index(i - 1, j + 1) == 1)
+									if (revealed_area.get_value(i - 1, j + 1) == 1)
 									{
-										revealed_area.modify_value_at_index(i, j, 1);
+										revealed_area.set_value(i, j) = 1;
 										count += 1;
 										continue;
 									}
@@ -167,26 +187,26 @@ void minesweeper::reveal_point(coord2 reveal_point)
 							}
 							if (i + 1 < height)
 							{
-								if (revealed_area.get_value_at_index(i + 1, j) == 1)
+								if (revealed_area.get_value(i + 1, j) == 1)
 								{
-									revealed_area.modify_value_at_index(i, j, 1);
+									revealed_area.set_value(i, j) = 1;
 									count += 1;
 									continue;
 								}
 								if (j - 1 >= 0)
 								{
-									if (revealed_area.get_value_at_index(i + 1, j - 1) == 1)
+									if (revealed_area.get_value(i + 1, j - 1) == 1)
 									{
-										revealed_area.modify_value_at_index(i, j, 1);
+										revealed_area.set_value(i, j) = 1;
 										count += 1;
 										continue;
 									}
 								}
 								if (j + 1 < width)
 								{
-									if (revealed_area.get_value_at_index(i + 1, j + 1) == 1)
+									if (revealed_area.get_value(i + 1, j + 1) == 1)
 									{
-										revealed_area.modify_value_at_index(i, j, 1);
+										revealed_area.set_value(i, j) = 1;
 										count += 1;
 										continue;
 									}
@@ -194,18 +214,18 @@ void minesweeper::reveal_point(coord2 reveal_point)
 							}
 							if (j - 1 >= 0)
 							{
-								if (revealed_area.get_value_at_index(i, j - 1) == 1)
+								if (revealed_area.get_value(i, j - 1) == 1)
 								{
-									revealed_area.modify_value_at_index(i, j, 1);
+									revealed_area.set_value(i, j) = 1;
 									count += 1;
 									continue;
 								}
 							}
 							if (j + 1 < width)
 							{
-								if (revealed_area.get_value_at_index(i, j + 1) == 1)
+								if (revealed_area.get_value(i, j + 1) == 1)
 								{
-									revealed_area.modify_value_at_index(i, j, 1);
+									revealed_area.set_value(i, j) = 1;
 									count += 1;
 									continue;
 								}
@@ -219,71 +239,71 @@ void minesweeper::reveal_point(coord2 reveal_point)
 				for (int j = 0; j < width; ++j)
 				{
 					
-					if (amount_of_mines_in_neighbours.get_value_at_index(i, j) != 0 && revealed_area.get_value_at_index(i, j) == 0)
+					if (amount_of_mines_in_neighbours.get_value(i, j) != 0 && revealed_area.get_value(i, j) == 0)
 					{
 
 						if (i - 1 >= 0)
 						{
 							
-							if (revealed_area.get_value_at_index(i - 1, j) == 1 && amount_of_mines_in_neighbours.get_value_at_index(i - 1, j) == 0)
+							if (revealed_area.get_value(i - 1, j) == 1 && amount_of_mines_in_neighbours.get_value(i - 1, j) == 0)
 							{
-								revealed_area.modify_value_at_index(i, j, 1);
+								revealed_area.set_value(i, j) = 1;
 								continue;
 							}
 							if (j - 1 >= 0)
 							{
-								if (revealed_area.get_value_at_index(i - 1, j - 1) == 1 && amount_of_mines_in_neighbours.get_value_at_index(i - 1, j - 1) == 0)
+								if (revealed_area.get_value(i - 1, j - 1) == 1 && amount_of_mines_in_neighbours.get_value(i - 1, j - 1) == 0)
 								{
-									revealed_area.modify_value_at_index(i, j, 1);
+									revealed_area.set_value(i, j) = 1;
 									continue;
 								}
 							}
 							if (j + 1 < width)
 							{
-								if (revealed_area.get_value_at_index(i - 1, j + 1) == 1 && amount_of_mines_in_neighbours.get_value_at_index(i - 1, j + 1) == 0)
+								if (revealed_area.get_value(i - 1, j + 1) == 1 && amount_of_mines_in_neighbours.get_value(i - 1, j + 1) == 0)
 								{
-									revealed_area.modify_value_at_index(i, j, 1);
+									revealed_area.set_value(i, j) = 1;
 									continue;
 								}
 							}
 						}
 						if (i + 1 < height)
 						{
-							if (revealed_area.get_value_at_index(i + 1, j) == 1 && amount_of_mines_in_neighbours.get_value_at_index(i + 1, j) == 0)
+							if (revealed_area.get_value(i + 1, j) == 1 && amount_of_mines_in_neighbours.get_value(i + 1, j) == 0)
 							{
-								revealed_area.modify_value_at_index(i, j, 1);
+								revealed_area.set_value(i, j) = 1;
 								continue;
 							}
 							if (j - 1 >= 0)
 							{
-								if (revealed_area.get_value_at_index(i + 1, j - 1) == 1 && amount_of_mines_in_neighbours.get_value_at_index(i + 1, j - 1) == 0)
+								if (revealed_area.get_value(i + 1, j - 1) == 1 && amount_of_mines_in_neighbours.get_value(i + 1, j - 1) == 0)
 								{
-									revealed_area.modify_value_at_index(i, j, 1);
+									revealed_area.set_value(i, j) = 1;
 									continue;
 								}
 							}
 							if (j + 1 < width)
 							{
-								if (revealed_area.get_value_at_index(i + 1, j + 1) == 1 && amount_of_mines_in_neighbours.get_value_at_index(i + 1, j + 1) == 0)
+								if (revealed_area.get_value(i + 1, j + 1) == 1 && amount_of_mines_in_neighbours.get_value(i + 1, j + 1) == 0)
 								{
-									revealed_area.modify_value_at_index(i, j, 1);
+									revealed_area.set_value(i, j) = 1;
 									continue;
 								}
 							}
 						}
 						if (j - 1 >= 0)
 						{
-							if (revealed_area.get_value_at_index(i, j - 1) == 1 && amount_of_mines_in_neighbours.get_value_at_index(i, j - 1) == 0)
+							if (revealed_area.get_value(i, j - 1) == 1 && amount_of_mines_in_neighbours.get_value(i, j - 1) == 0)
 							{
-								revealed_area.modify_value_at_index(i, j, 1);
+								revealed_area.set_value(i, j) = 1;
 								continue;
 							}
 						}
 						if (j + 1 < width)
 						{
-							if (revealed_area.get_value_at_index(i, j + 1) == 1 && amount_of_mines_in_neighbours.get_value_at_index(i, j + 1) == 0)
+							if (revealed_area.get_value(i, j + 1) == 1 && amount_of_mines_in_neighbours.get_value(i, j + 1) == 0)
 							{
-								revealed_area.modify_value_at_index(i, j, 1);
+								revealed_area.set_value(i, j) = 1;
 								continue;
 							}
 						}
@@ -293,7 +313,7 @@ void minesweeper::reveal_point(coord2 reveal_point)
 		}
 	}		
 }
-void minesweeper::reveal_area_around_num_with_enough_mine_flag(coord2 reveal_point)
+void minesweeper::reveal_area_with_enough_flags(coord2 reveal_point)
 {
 	bool doesithaveenoughflags = false;
 	int beginning_x = 0;
@@ -330,29 +350,29 @@ void minesweeper::reveal_area_around_num_with_enough_mine_flag(coord2 reveal_poi
 		for (int j = beginning_x; j < end_x; ++j)
 		{
 			
-			if (flags.get_value_at_index(i, j) == 1)
+			if (flags.get_value(i, j) == 1)
 			{
 				++count;
 			}
 		}
 	}
 	
-	if (count == amount_of_mines_in_neighbours.get_value_at_index(reveal_point.y, reveal_point.x));
+	if (count == amount_of_mines_in_neighbours.get_value(reveal_point.y, reveal_point.x));
 	{
 		for (int i = beginning_y; i < end_y; ++i)
 		{
 			for (int j = beginning_x; j < end_x; ++j)
 			{
 				
-				if (flags.get_value_at_index(i, j) == 0 && revealed_area.get_value_at_index(i, j) == 0)
+				if (flags.get_value(i, j) == 0 && revealed_area.get_value(i, j) == 0)
 				{
-					revealed_area.modify_value_at_index(i, j, 1);
+					revealed_area.set_value(i, j) = 1;
 				}
 			}
 		}
 	}
 }
-int minesweeper::add_three_by_three_area(int row, int column)
+int minesweeper::add_3_by_3_area(int row, int column)
 {
 	int length_from_center = ((minesweeper::area_3x3.side_length - 1) / 2);
 	int beginning_x = column - length_from_center;
@@ -374,7 +394,7 @@ int minesweeper::add_three_by_three_area(int row, int column)
 			}
 			//std::cout << "\n" << row << " " << column << ": " << i <<" " << j <<" "  << sum << "\n";
 			
-			sum += field.get_value_at_index(i, j);
+			sum += field.get_value(i, j);
 		}
 
 	}
@@ -384,9 +404,9 @@ int minesweeper::add_three_by_three_area(int row, int column)
 void minesweeper::make_tile_flag(coord2 flag_point)
 {
 	
-	if (revealed_area.get_value_at_index(flag_point.y, flag_point.x) == 0)
+	if (revealed_area.get_value(flag_point.y, flag_point.x) == 0)
 	{
-		flags.modify_value_at_index(flag_point.y, flag_point.x, 1);
+		flags.set_value(flag_point.y, flag_point.x) = 1;
 	}
 }
 
@@ -397,12 +417,12 @@ void minesweeper::generate_amount_of_mines()
 		for (int j = 0; j < width; ++j)
 		{
 			
-			if (field.get_value_at_index(i, j) == 1)
+			if (field.get_value(i, j) == 1)
 			{
-				amount_of_mines_in_neighbours.modify_value_at_index(i, j, 9);
+				amount_of_mines_in_neighbours.set_value(i, j) = 9;
 				continue;
 			}
-			amount_of_mines_in_neighbours.modify_value_at_index(i, j, add_three_by_three_area(i, j));
+			amount_of_mines_in_neighbours.set_value(i, j) = add_3_by_3_area(i, j);
 		}
 	}
 }

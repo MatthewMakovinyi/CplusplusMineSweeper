@@ -8,8 +8,8 @@ class vector_2d
 		int width;
 		int height;
 		vector_2d(int width, int height, int defaul_value);
-		int get_value_at_index(int row, int column);
-		void modify_value_at_index(int row, int column, int value);
+		int get_value(int row, int column);
+		int& set_value(int row, int column);
 };
 #endif
 
