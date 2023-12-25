@@ -2,6 +2,7 @@
 #include <vector>
 #include "minesweeper.h"
 #include "equalsidedsquarearea.h"
+#include "vector_2d.h"
 #include <ctime>
 
 using namespace std;

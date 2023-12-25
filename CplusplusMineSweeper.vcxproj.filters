@@ -27,6 +27,9 @@
     <ClCompile Include="equalsidedsquarearea.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vector_2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="minesweeper.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="equalsidedsquarearea.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vector_2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -144,11 +144,13 @@
     <ClCompile Include="CplusplusMineSweeper.cpp" />
     <ClCompile Include="equalsidedsquarearea.cpp" />
     <ClCompile Include="minesweeper.cpp" />
+    <ClCompile Include="vector_2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="coord2.h" />
     <ClInclude Include="equalsidedsquarearea.h" />
     <ClInclude Include="minesweeper.h" />
+    <ClInclude Include="vector_2d.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,4 +1,5 @@
 #include "equalsidedsquarearea.h"
+#include "vector_2d.h"
 #ifndef MINESWEEPER_H
 #define MINESWEEPER_H
 class minesweeper
@@ -15,10 +16,10 @@ class minesweeper
 		void reveal_area_around_num_with_enough_mine_flag(coord2 reveal_point);
 		void generate_amount_of_mines();
 		void make_tile_flag(coord2 flag_point);
-		int* field;
-		int* amount_of_mines_in_neighbours;
-		int* revealed_area;
-		int* flags;
+		vector_2d field;
+		vector_2d amount_of_mines_in_neighbours;
+		vector_2d revealed_area;
+		vector_2d flags;
 		int width;
 		int height;
 		int mine_amount;
